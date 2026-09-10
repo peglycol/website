@@ -1,6 +1,6 @@
 ---
-name: "enscribe"
-pronouns: "he/him"
+name: "peglycol"
+pronouns: "they/them"
 avatar: "https://avatars.githubusercontent.com/u/71956291?v=4"
 bio: "d(-_-)b"
 mail: "jason@enscribe.dev"
