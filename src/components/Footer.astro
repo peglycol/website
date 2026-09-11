@@ -1,9 +1,10 @@
 ---
+import RSS from "@/assets/icons/rss.svg"
 import SocialIcons from "@/components/SocialIcons.astro"
-import { SITE, SOCIALS } from "@/consts"
 import { getEntry } from "astro:content"
 
 const author = (await getEntry("authors", "peglycol"))!
+const links = [{ href: "/rss.xml", label: "RSS", icon: RSS }]
 ---
 
 <footer>
@@ -27,7 +28,7 @@ const author = (await getEntry("authors", "peglycol"))!
       >{author.data.name}</a
     >.
   </p>
-  <SocialIcons links={SOCIALS} />
+  <SocialIcons links={links} />
 </footer>
 
 <style>
