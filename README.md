@@ -2,7 +2,7 @@
 
 <div align="center">
 
-## astro-erudite
+## peglycol's Website
 
 ![Stargazers]
 ![Astro Version]
