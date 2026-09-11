@@ -12,7 +12,7 @@ import { headingNamespace } from "./src/lib/heading-namespace"
 import { headingAnchors } from "./src/lib/heading-anchors"
 
 export default defineConfig({
-  site: "peglycol.dev",
+  site: "https://peglycol.dev",
   compressHTML: true,
   prefetch: { prefetchAll: true },
   integrations: [
