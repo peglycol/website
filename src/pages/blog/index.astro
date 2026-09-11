@@ -1,15 +1,28 @@
 ---
 import BlogCard from "@/components/BlogCard.astro"
 import MetaPage from "@/components/MetaPage.astro"
+import SearchFilter from "@/components/SearchFilter.astro"
 import Layout from "@/layouts/Layout.astro"
-import { getPosts } from "@/lib/content"
+import { getPosts, getTags } from "@/lib/content"
 
 const posts = await getPosts()
+const tags = await getTags()
+const tagCounts: [string, number][] = [...tags].map(([tag, tagged]) => [
+  tag,
+  tagged.length,
+])
 ---
 
 <Layout>
   <MetaPage slot="head" title="Blog" />
-  <ul>
+  <SearchFilter
+    slot="toc"
+    tags={tagCounts}
+    listSelector="#post-list > li"
+    itemLabel="posts"
+    placeholder="Search posts…"
+  />
+  <ul id="post-list">
     {posts.map((post) => <BlogCard post={post} />)}
   </ul>
 </Layout>

@@ -27,13 +27,7 @@ import { clouds } from "@/lib/clouds"
     pointer-events: none;
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) star-field {
-      display: block;
-    }
-  }
-
-  :root[data-theme="dark"] star-field {
+  :root:not([data-theme="light"]) star-field {
     display: block;
   }
 
@@ -67,12 +61,6 @@ import { clouds } from "@/lib/clouds"
     z-index: -1;
     overflow: hidden;
     pointer-events: none;
-  }
-
-  @media (prefers-color-scheme: light) {
-    :root:not([data-theme="dark"]) cloud-field {
-      display: block;
-    }
   }
 
   :root[data-theme="light"] cloud-field {

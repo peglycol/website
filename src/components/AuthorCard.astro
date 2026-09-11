@@ -1,57 +1,29 @@
 ---
-import Email from "@/assets/icons/email.svg"
-import GitHub from "@/assets/icons/github.svg"
-import Globe from "@/assets/icons/globe.svg"
-import Link from "@/assets/icons/link.svg"
-import Twitter from "@/assets/icons/twitter.svg"
-import SocialIcons from "@/components/SocialIcons.astro"
-import { normalizePath } from "@/lib/utils"
-import type { SvgComponent } from "astro/types"
 import type { CollectionEntry } from "astro:content"
 
-type Props = { author: CollectionEntry<"authors"> }
+type Props = { author: CollectionEntry<"authors">; bio?: string }
 
-const { author } = Astro.props
-const { name, pronouns, avatar, bio, mail, socials } = author.data
-
-const ICONS: Record<string, { label: string; icon: SvgComponent }> = {
-  website: { label: "Website", icon: Globe },
-  github: { label: "GitHub", icon: GitHub },
-  twitter: { label: "Twitter", icon: Twitter },
-}
-
-const links = [
-  ...Object.entries(socials ?? {}).map(([key, href]) => ({
-    href,
-    ...(ICONS[key] ?? { label: key, icon: Link }),
-  })),
-  ...(mail ? [{ href: `mailto:${mail}`, label: "Email", icon: Email }] : []),
-]
-
-const href = `/about/${author.id}`
-const isCurrent = normalizePath(Astro.url.pathname) === href
+const { author, bio } = Astro.props
+const { name, pronouns, avatar } = author.data
+const blurb = bio ?? author.data.bio
 ---
 
-<li>
-  {isCurrent ? (
-      <img src={avatar} alt={name} width="64" height="64" />
-    ) : (
-      <a href={href} tabindex="-1" aria-hidden="true">
-        <img src={avatar} alt="" width="64" height="64" />
-      </a>
-    )}
+<author-card>
+  <a href="/about" tabindex="-1" aria-hidden="true">
+    <img src={avatar} alt="" width="64" height="64">
+  </a>
   <author-info>
     <author-name>
-      {isCurrent ? name : <a href={href}>{name}</a>}
+      <a href="/about">{name}</a>
       {pronouns && <author-pronouns>{pronouns}</author-pronouns>}
     </author-name>
-    {bio && <p>{bio}</p>}
-    {links.length > 0 && <SocialIcons links={links} />}
+    {blurb && <p>{blurb}</p>}
+    <a href="/about">More about me →</a>
   </author-info>
-</li>
+</author-card>
 
 <style>
-  li {
+  author-card {
     display: flex;
     align-items: flex-start;
     gap: var(--space-s);
@@ -75,6 +47,10 @@ const isCurrent = normalizePath(Astro.url.pathname) === href
         font-weight: var(--font-weight-medium);
         margin-block-start: -0.2em;
 
+        a {
+          color: var(--foreground);
+        }
+
         author-pronouns {
           margin-inline-start: var(--space-3xs);
           font-size: var(--step--1);
@@ -86,6 +62,15 @@ const isCurrent = normalizePath(Astro.url.pathname) === href
       p {
         color: var(--muted-foreground);
         margin-block-end: var(--space-3xs);
+      }
+
+      > a {
+        font-size: var(--step--1);
+        color: var(--muted-foreground);
+
+        &:hover {
+          color: var(--foreground);
+        }
       }
     }
 

@@ -9,7 +9,7 @@ const { post } = Astro.props
 const authors = await getEntries(post.data.authors)
 ---
 
-<li>
+<li data-tags={post.data.tags?.join(",") ?? ""}>
   {post.data.image && (
       <a href={`/blog/${post.id}`} tabindex="-1" aria-hidden="true">
         <Image src={post.data.image} alt="" width={640} height={336} />

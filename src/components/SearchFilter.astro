@@ -1,0 +1,260 @@
+---
+import ChevronIcon from "@/assets/icons/callouts/alt-arrow-down.svg"
+
+type Props = {
+  tags: [string, number][]
+  listSelector: string
+  itemLabel: string
+  placeholder: string
+}
+
+const { tags, listSelector, itemLabel, placeholder } = Astro.props
+---
+
+<nav aria-label={`Search and filter ${itemLabel}`} data-list={listSelector}>
+  <label data-bar>
+    <input type="checkbox" aria-label="Toggle search and filter">
+    <filter-current>Search &amp; filter</filter-current>
+    <ChevronIcon aria-hidden="true" />
+  </label>
+  <filter-panel data-bar>
+    <search-field>
+      <input
+        type="search"
+        name="q"
+        placeholder={placeholder}
+        aria-label={placeholder}
+      >
+    </search-field>
+    {tags.length > 0 && (
+        <tag-list>
+          {tags.map(([tag, count]) => (
+              <label>
+                <input type="checkbox" name="tag" value={tag} />
+                <span>#{tag}</span>
+                <tag-count>{count}</tag-count>
+              </label>
+            ))}
+        </tag-list>
+      )}
+    <p data-empty hidden>No {itemLabel} match your filters.</p>
+  </filter-panel>
+</nav>
+
+<style>
+  nav {
+    position: sticky;
+    top: var(--page-offset-top);
+    display: flex;
+    flex-direction: column;
+    max-height: calc(
+      100svh -
+      var(--page-offset-top) -
+      var(--page-offset-bottom)
+    );
+    font-size: var(--step--1);
+
+    @media (width < 64rem) {
+      position: relative;
+      top: auto;
+      max-height: none;
+    }
+  }
+
+  label {
+    display: none;
+
+    @media (width < 64rem) {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2xs);
+      cursor: pointer;
+
+      input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      filter-current {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--muted-foreground);
+      }
+
+      > svg {
+        flex-shrink: 0;
+        inline-size: 1em;
+        block-size: 1em;
+        color: var(--muted-foreground);
+      }
+    }
+  }
+
+  nav:has(> label > input:focus-visible) label {
+    @media (width < 64rem) {
+      outline: 2px solid var(--ring);
+      outline-offset: -2px;
+    }
+  }
+
+  nav:has(> label > input:checked) label > svg {
+    @media (width < 64rem) {
+      rotate: 180deg;
+    }
+  }
+
+  filter-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    @media (width < 64rem) {
+      display: none;
+      position: absolute;
+      inset-block-start: 100%;
+      inset-inline: 0;
+      max-block-size: 50svh;
+    }
+  }
+
+  nav:has(> label > input:checked) filter-panel {
+    @media (width < 64rem) {
+      display: flex;
+    }
+  }
+
+  search-field input {
+    inline-size: 100%;
+    padding: var(--space-2xs) var(--space-xs);
+    color: var(--foreground);
+    background-color: color-mix(in oklab, var(--muted) 50%, transparent);
+    border-radius: var(--radius-md);
+
+    &::placeholder {
+      color: var(--muted-foreground);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--ring);
+      outline-offset: -2px;
+    }
+  }
+
+  tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3xs);
+
+    label {
+      display: inline-flex;
+      align-items: center;
+      padding-inline: var(--space-2xs);
+      cursor: pointer;
+      color: var(--muted-foreground);
+      background-color: color-mix(in oklab, var(--muted) 50%, transparent);
+      border-radius: var(--radius-full);
+
+      &:hover {
+        color: var(--foreground);
+      }
+
+      &:has(input:checked) {
+        color: var(--primary-foreground);
+        background-color: var(--primary);
+      }
+
+      &:has(input:focus-visible) {
+        outline: 2px solid var(--ring);
+        outline-offset: 1px;
+      }
+
+      input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      tag-count {
+        margin-inline-start: var(--space-3xs);
+        opacity: 0.6;
+      }
+    }
+  }
+
+  [data-empty] {
+    color: var(--muted-foreground);
+  }
+</style>
+
+<script>
+  const nav = document.querySelector<HTMLElement>("page-toc nav")
+  if (nav) {
+    const listSelector = nav.dataset.list
+    const search = nav.querySelector<HTMLInputElement>("search-field input")
+    const tagInputs = [
+      ...nav.querySelectorAll<HTMLInputElement>(
+        "tag-list input[type=checkbox]",
+      ),
+    ]
+    const current = nav.querySelector("filter-current")
+    const empty = nav.querySelector<HTMLElement>("[data-empty]")
+    const items = listSelector
+      ? [...document.querySelectorAll<HTMLElement>(listSelector)]
+      : []
+
+    const summarize = () => {
+      const selected = tagInputs.filter((input) => input.checked)
+      const parts: string[] = []
+      if (search?.value.trim()) parts.push(`"${search.value.trim()}"`)
+      if (selected.length > 0)
+        parts.push(`${selected.length} tag${selected.length > 1 ? "s" : ""}`)
+      if (current)
+        current.textContent =
+          parts.length > 0 ? parts.join(" · ") : "Search & filter"
+    }
+
+    const filter = () => {
+      const query = search?.value.trim().toLowerCase() ?? ""
+      const selectedTags = tagInputs
+        .filter((input) => input.checked)
+        .map((input) => input.value)
+
+      let visibleCount = 0
+      for (const item of items) {
+        const title =
+          item.querySelector("entry-info > a")?.textContent?.toLowerCase() ?? ""
+        const description =
+          item.querySelector("entry-info > p")?.textContent?.toLowerCase() ?? ""
+        const tags = (item.dataset.tags ?? "").split(",")
+
+        const matchesQuery =
+          !query || title.includes(query) || description.includes(query)
+        const matchesTags = selectedTags.every((tag) => tags.includes(tag))
+        const visible = matchesQuery && matchesTags
+
+        item.hidden = !visible
+        if (visible) visibleCount++
+      }
+
+      if (empty) empty.hidden = visibleCount > 0
+      summarize()
+    }
+
+    search?.addEventListener("input", filter)
+    for (const input of tagInputs) input.addEventListener("change", filter)
+    filter()
+  }
+</script>
