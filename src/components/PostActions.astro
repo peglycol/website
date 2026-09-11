@@ -1,7 +1,6 @@
 ---
 import ArrowLeft from "@/assets/icons/arrow-left.svg"
 import ArrowRight from "@/assets/icons/arrow-right.svg"
-import ScrollToTop from "@/components/ScrollToTop.astro"
 import type { CollectionEntry } from "astro:content"
 
 type Post = CollectionEntry<"blog">
@@ -13,43 +12,88 @@ const { prev, next } = Astro.props
 <post-actions>
   <a
     href={prev && `/blog/${prev.id}`}
-    data-icon-button
     data-dir="prev"
-    aria-label={prev && `Previous post: ${prev.data.title}`}
     aria-hidden={!prev || undefined}
-    title={prev?.data.title}
   >
     <ArrowLeft />
+    <span>
+      <small>Previous</small>
+      <strong>{prev?.data.title}</strong>
+    </span>
   </a>
   <a
     href={next && `/blog/${next.id}`}
-    data-icon-button
     data-dir="next"
-    aria-label={next && `Next post: ${next.data.title}`}
     aria-hidden={!next || undefined}
-    title={next?.data.title}
   >
+    <span>
+      <small>Next</small>
+      <strong>{next?.data.title}</strong>
+    </span>
     <ArrowRight />
   </a>
-  <ScrollToTop />
 </post-actions>
 
 <style>
   post-actions {
-    display: contents;
+    display: flex;
+    gap: var(--grid-gutter);
+    margin-block-start: var(--space-xl);
 
-    @media (width < 64rem) {
-      display: none;
+    @media (width < 40rem) {
+      flex-direction: column;
     }
   }
 
   a {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: var(--space-2xs);
+    min-width: 0;
+    padding: var(--space-s);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-lg);
     color: var(--foreground);
+
+    &:hover {
+      background-color: color-mix(in oklab, var(--muted) 50%, transparent);
+    }
 
     &:not([href]) {
       color: var(--muted-foreground);
       opacity: 0.5;
       pointer-events: none;
     }
+
+    svg {
+      flex-shrink: 0;
+      width: 1rem;
+      height: 1rem;
+      color: var(--muted-foreground);
+    }
+  }
+
+  a[data-dir="next"] {
+    text-align: end;
+  }
+
+  span {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  small {
+    font-size: var(--step--1);
+    color: var(--muted-foreground);
+  }
+
+  strong {
+    font-weight: var(--font-weight-medium);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 </style>

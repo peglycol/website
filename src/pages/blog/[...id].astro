@@ -69,8 +69,7 @@ if (isSubpost(post.id)) {
         sections={sections}
       />
     )}
-  <PostActions slot="actions" prev={prev} next={next} />
-  <ScrollToTop floating />
+  <ScrollToTop />
   {rendered.map(({ entry, Content, authors }, i) => (
       <article
         id={i === 0 ? undefined : subpostSlug(entry.id)}
@@ -130,6 +129,7 @@ if (isSubpost(post.id)) {
       </article>
     ))}
   {chain.length > 1 && <SeriesReader />}
+  <PostActions prev={prev} next={next} />
 </Layout>
 
 <style>

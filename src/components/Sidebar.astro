@@ -13,7 +13,7 @@ const section = NAVIGATION.find(
 )
 ---
 
-<aside data-bar>
+<aside>
   <sidebar-inner>
     <a href="/" aria-label={SITE.title}>
       <Logo />
@@ -69,26 +69,28 @@ const section = NAVIGATION.find(
 
 <style>
   aside {
-    position: sticky;
-    top: var(--page-offset-top);
+    align-items: center;
+    position: static;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    gap: var(--space-s);
     justify-content: space-between;
-    height: calc(100svh - var(--page-offset-top) - var(--page-offset-bottom));
-
-    @media (width < 64rem) {
-      position: static;
-      height: auto;
-      flex-direction: row;
-      align-items: center;
-      gap: var(--space-s);
-    }
+    height: auto;
+    padding-block: var(--space-2xs);
+    padding-inline: var(--bar-gutter);
+    background-color: color-mix(in oklab, var(--background) 90%, transparent);
+    backdrop-filter: blur(var(--blur-sm));
+    border-block-end: 2px solid var(--border);
+    border-image: var(--bar-border-image);
   }
 
   sidebar-inner {
+    align-items: center;
     display: flex;
-    flex-direction: column;
+    flex: 1;
+    flex-direction: row;
     gap: var(--space-2xs);
+    justify-content: space-between;
 
     > a {
       display: inline-flex;
@@ -112,19 +114,13 @@ const section = NAVIGATION.find(
         }
       }
     }
-
-    @media (width < 64rem) {
-      flex: 1;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-    }
   }
 
   nav ul {
+    align-items: center;
     display: flex;
-    flex-direction: column;
-    gap: var(--space-3xs);
+    flex-direction: row;
+    gap: var(--space-s);
 
     a {
       display: block;
@@ -141,42 +137,17 @@ const section = NAVIGATION.find(
     }
 
     ul {
-      margin-block-start: var(--space-3xs);
-
-      a {
-        margin-inline-start: var(--space-xs);
-      }
-
-      li[data-depth="1"] a {
-        margin-inline-start: calc(2 * var(--space-xs));
-      }
-    }
-
-    @media (width < 64rem) {
-      flex-direction: row;
-      align-items: center;
-      gap: var(--space-s);
-
-      ul {
         display: none;
-      }
     }
   }
 
   nav li:has(> ul) > a {
-    @media (width < 64rem) {
-      color: var(--foreground);
-    }
+    color: var(--foreground);
   }
 
   sidebar-toggle {
     display: flex;
     align-items: center;
-    margin-inline-start: -0.5rem;
-
-    @media (width < 64rem) {
-      margin-inline-start: 0;
-      margin-inline-end: -0.5rem;
-    }
+    margin-inline-end: -0.5rem;
   }
 </style>

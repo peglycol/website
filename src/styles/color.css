@@ -16,7 +16,6 @@
   --red-11: light-dark(#ce2c31, #ff9592);
 
   --blue-1: light-dark(#fcfcfc, #273149);
-
   --blue-3: light-dark(#fcfcfc, #0c0c17);
 
   --background:         linear-gradient(to bottom, var(--blue-3), var(--blue-1));
@@ -48,5 +47,6 @@
 
 body {
   background: var(--background);
+  background-attachment: fixed;
   color: var(--foreground);
 }
