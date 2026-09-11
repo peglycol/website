@@ -18,6 +18,7 @@ import "@/styles/shape.css"
 import Footer from "@/components/Footer.astro"
 import MetaHead from "@/components/MetaHead.astro"
 import Sidebar from "@/components/Sidebar.astro"
+import Sky from "@/components/Sky.astro"
 import { SITE } from "@/consts"
 
 type Props = { crumbs?: { label: string; href: string }[] }
@@ -30,6 +31,7 @@ const { crumbs } = Astro.props
     <slot name="head" />
   </MetaHead>
   <body>
+    <Sky />
     <page-grid>
       <page-header>
         <page-nav>

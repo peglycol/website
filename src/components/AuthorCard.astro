@@ -28,7 +28,7 @@ const links = [
   ...(mail ? [{ href: `mailto:${mail}`, label: "Email", icon: Email }] : []),
 ]
 
-const href = `/authors/${author.id}`
+const href = `/about/${author.id}`
 const isCurrent = normalizePath(Astro.url.pathname) === href
 ---
 

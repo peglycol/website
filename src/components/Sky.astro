@@ -1,0 +1,144 @@
+---
+import { stars } from "@/lib/stars"
+import { clouds } from "@/lib/clouds"
+---
+
+<star-field aria-hidden="true">
+  {stars.map((s) => (
+      <span
+        style={`--x:${s.x}%; --y:${s.y}%; --size:${s.size}px; --duration:${s.duration}s; --phase:${s.phase}; --min:${s.min}; --max:${s.max};`}
+      />
+    ))}
+</star-field>
+<cloud-field aria-hidden="true">
+  {clouds.map((c) => (
+      <span
+        style={`--y:${c.y}%; --width:${c.width}rem; --height:${c.height}rem; --opacity:${c.opacity}; --duration:${c.duration}s; --phase:${c.phase};`}
+      />
+    ))}
+</cloud-field>
+
+<style>
+  star-field {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) star-field {
+      display: block;
+    }
+  }
+
+  :root[data-theme="dark"] star-field {
+    display: block;
+  }
+
+  star-field span {
+    position: absolute;
+    top: var(--y);
+    left: var(--x);
+    width: var(--size);
+    height: var(--size);
+    border-radius: var(--radius-full);
+    background: white;
+    box-shadow: 0 0 calc(var(--size) * 2) rgb(255 255 255 / 0.8);
+    opacity: var(--min);
+    animation: twinkle var(--duration) ease-in-out var(--delay) infinite;
+  }
+
+  @keyframes twinkle {
+    0%,
+    100% {
+      opacity: var(--min);
+    }
+    50% {
+      opacity: var(--max);
+    }
+  }
+
+  cloud-field {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) cloud-field {
+      display: block;
+    }
+  }
+
+  :root[data-theme="light"] cloud-field {
+    display: block;
+  }
+
+  cloud-field span {
+    position: absolute;
+    top: var(--y);
+    width: var(--width);
+    height: var(--height);
+    opacity: var(--opacity);
+    filter: blur(1px);
+    animation: drift var(--duration) linear var(--delay) infinite;
+
+    &,
+    &::before,
+    &::after {
+      background: white;
+      border-radius: var(--radius-full);
+    }
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+    }
+
+    &::before {
+      inline-size: 55%;
+      block-size: 170%;
+      inset-block-start: -85%;
+      inset-inline-start: 8%;
+    }
+
+    &::after {
+      inline-size: 40%;
+      block-size: 130%;
+      inset-block-start: -65%;
+      inset-inline-end: 12%;
+    }
+  }
+
+  @keyframes drift {
+    from {
+      translate: -20vw 0;
+    }
+    to {
+      translate: 120vw 0;
+    }
+  }
+</style>
+
+<script is:inline>
+  // keep animation continuous across page loads and theme toggles
+  const syncSky = () => {
+    const now = Date.now() / 1000
+    for (const el of document.querySelectorAll(
+      "star-field span, cloud-field span",
+    )) {
+      const duration = parseFloat(el.style.getPropertyValue("--duration"))
+      const phase = parseFloat(el.style.getPropertyValue("--phase"))
+      const offset = (now + phase * duration) % duration
+      el.style.setProperty("--delay", `-${offset}s`)
+    }
+  }
+  syncSky()
+  document.addEventListener("themechange", syncSky)
+</script>

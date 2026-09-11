@@ -28,8 +28,8 @@
   );
   --grid-column-width: calc(
     (
-        min(100%, var(--grid-max-width)) -
-          (var(--grid-columns) + 1) * var(--grid-gutter)
+        min(100%, var(--grid-max-width)) - (var(--grid-columns) + 1) *
+          var(--grid-gutter)
       ) /
       var(--grid-columns)
   );
@@ -52,7 +52,9 @@ html {
 
   @media (width < 64rem) {
     --bar-toc-height: 0px;
-    scroll-padding-block-start: calc(var(--page-offset-top) + var(--bar-toc-height));
+    scroll-padding-block-start: calc(
+      var(--page-offset-top) + var(--bar-toc-height)
+    );
 
     &:has(page-toc) {
       --bar-toc-height: calc(1.5 * var(--step--1) + 2 * var(--space-2xs) + 2px);
