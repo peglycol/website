@@ -7,21 +7,36 @@ import type { CollectionEntry } from "astro:content"
 type Props = { project: CollectionEntry<"projects"> }
 
 const { project } = Astro.props
-const { name, description, link, tags, image, startDate, endDate } =
-  project.data
+const {
+  name,
+  description,
+  link,
+  tags,
+  image,
+  imageCredit,
+  startDate,
+  endDate,
+} = project.data
 ---
 
 <li data-tags={tags?.join(",") ?? ""}>
   {image && (
-      <a
-        href={link}
-        target="_blank"
-        rel="noopener noreferrer"
-        tabindex="-1"
-        aria-hidden="true"
-      >
-        <Image src={image} alt="" width={640} height={336} />
-      </a>
+      <>
+        {imageCredit && (
+            <Fragment
+              set:html={`<!-- Photo: ${imageCredit.author}${imageCredit.authorHref ? ` (${imageCredit.authorHref})` : ""}, license: ${imageCredit.license}${imageCredit.licenseHref ? ` (${imageCredit.licenseHref})` : ""}${imageCredit.sourceHref ? `, source: ${imageCredit.sourceHref}` : ""} -->`}
+            />
+          )}
+        <a
+          href={link}
+          target="_blank"
+          rel="noopener noreferrer"
+          tabindex="-1"
+          aria-hidden="true"
+        >
+          <Image src={image} alt="" width={640} height={336} />
+        </a>
+      </>
     )}
   <entry-info>
     <a href={link} target="_blank" rel="noopener noreferrer">{name}</a>
