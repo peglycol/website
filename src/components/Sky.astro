@@ -106,10 +106,10 @@ import { clouds } from "@/lib/clouds"
 
   @keyframes drift {
     from {
-      translate: -20vw 0;
+      translate: calc(-1 * var(--width)) 0;
     }
     to {
-      translate: 120vw 0;
+      translate: calc(100vw + var(--width)) 0;
     }
   }
 </style>

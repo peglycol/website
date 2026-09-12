@@ -4,7 +4,7 @@
 
 </div>
 
-This is peglycol's personal website. It is created with astro-erudite, [enscribe](https://enscribe.dev)'s template built with [Astro](https://astro.build/) and native CSS.
+This is peglycol's personal website, created with astro-erudite, [enscribe](https://enscribe.dev)'s template built with [Astro](https://astro.build/) and native CSS.
 
 ## Development
 
